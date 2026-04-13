@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { CATEGORY_OPTIONS } from "@/lib/category-options";
 import type { Category, Product } from "@/types";
 
 function decimalToNumber(value: { toNumber?: () => number } | number) {
@@ -73,18 +74,46 @@ function mapCategory(category: {
   };
 }
 
+function getStaticStorefrontCategories(): Category[] {
+  return CATEGORY_OPTIONS.map((category) => ({
+    id: `static-${category.slug}`,
+    name: category.name,
+    slug: category.slug,
+    description: category.description
+  }));
+}
+
 export async function getStorefrontCategories() {
   try {
-    const categories = await prisma.category.findMany({
+    const activeCategories = await prisma.category.findMany({
       where: {
         isActive: true
       },
       orderBy: [{ sortOrder: "asc" }, { name: "asc" }]
     });
 
-    return categories.map(mapCategory);
+    if (activeCategories.length > 0) {
+      return activeCategories.map(mapCategory);
+    }
+
+    const publishedProductCategories = await prisma.category.findMany({
+      where: {
+        products: {
+          some: {
+            isPublished: true
+          }
+        }
+      },
+      orderBy: [{ sortOrder: "asc" }, { name: "asc" }]
+    });
+
+    if (publishedProductCategories.length > 0) {
+      return publishedProductCategories.map(mapCategory);
+    }
+
+    return getStaticStorefrontCategories();
   } catch {
-    return [];
+    return getStaticStorefrontCategories();
   }
 }
 
