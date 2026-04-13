@@ -19,6 +19,8 @@ const initialState = {
   values: undefined
 };
 
+const premiumEase = [0.22, 1, 0.36, 1] as const;
+
 function getInputClassName(hasError: boolean) {
   return clsx(
     "w-full rounded-2xl border px-4 py-3 outline-none transition",
@@ -228,56 +230,56 @@ export function PaytrCheckoutForm() {
                 initial={{ opacity: 0, y: 24, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -14, scale: 0.96 }}
-                transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-              className="rounded-3xl border border-white/10 bg-white/5 p-4"
+                transition={{ duration: 0.24, ease: premiumEase }}
+                className="rounded-3xl border border-white/10 bg-white/5 p-4"
               >
-              <div className="flex items-start gap-4">
-                <div className="relative h-16 w-16 overflow-hidden rounded-2xl bg-white/10">
-                  {item.imageUrl ? (
-                    <Image src={item.imageUrl} alt={item.title} fill className="object-cover" />
-                  ) : null}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="font-semibold text-white">{item.title}</p>
-                  <p className="mt-1 text-sm text-white/75">
-                    Birim fiyat: {formatCurrency(item.price)}
-                  </p>
-                  <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => updateQuantity(item.productId, item.quantity - 1)}
-                        className="rounded-full border border-white/15 p-2 transition hover:bg-white/10"
-                      >
-                        <Minus className="h-4 w-4" />
-                      </button>
-                      <span className="min-w-8 text-center text-sm font-semibold">
-                        {item.quantity}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                        className="rounded-full border border-white/15 p-2 transition hover:bg-white/10"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </button>
-                    </div>
+                <div className="flex items-start gap-4">
+                  <div className="relative h-16 w-16 overflow-hidden rounded-2xl bg-white/10">
+                    {item.imageUrl ? (
+                      <Image src={item.imageUrl} alt={item.title} fill className="object-cover" />
+                    ) : null}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-semibold text-white">{item.title}</p>
+                    <p className="mt-1 text-sm text-white/75">
+                      Birim fiyat: {formatCurrency(item.price)}
+                    </p>
+                    <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                          className="rounded-full border border-white/15 p-2 transition hover:bg-white/10"
+                        >
+                          <Minus className="h-4 w-4" />
+                        </button>
+                        <span className="min-w-8 text-center text-sm font-semibold">
+                          {item.quantity}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                          className="rounded-full border border-white/15 p-2 transition hover:bg-white/10"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </button>
+                      </div>
 
-                    <div className="flex items-center gap-3">
-                      <span className="text-sm font-semibold">
-                        {formatCurrency(item.price * item.quantity)}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => removeItem(item.productId)}
-                        className="rounded-full border border-white/15 p-2 transition hover:bg-white/10"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm font-semibold">
+                          {formatCurrency(item.price * item.quantity)}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => removeItem(item.productId)}
+                          className="rounded-full border border-white/15 p-2 transition hover:bg-white/10"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
               </motion.div>
             ))}
           </AnimatePresence>

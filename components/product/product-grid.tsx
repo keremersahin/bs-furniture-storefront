@@ -9,6 +9,8 @@ type ProductGridProps = {
   animationKey?: string;
 };
 
+const premiumEase = [0.22, 1, 0.36, 1] as const;
+
 const gridVariants = {
   hidden: {},
   visible: {
@@ -29,7 +31,7 @@ const itemVariants = {
     y: 0,
     transition: {
       duration: 0.55,
-      ease: [0.22, 1, 0.36, 1]
+      ease: premiumEase
     }
   }
 };

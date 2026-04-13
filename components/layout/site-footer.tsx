@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { CreditCard, LockKeyhole, Mail, ShieldCheck } from "lucide-react";
 import { siteConfig } from "@/lib/config";
 
@@ -18,21 +18,23 @@ const corporateLinks = [
   { href: "/legal/delivery", label: "Teslimat Sartlari" }
 ];
 
-const footerVariants = {
+const premiumEase = [0.22, 1, 0.36, 1] as const;
+
+const footerVariants: Variants = {
   hidden: { opacity: 0, y: 28 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1], staggerChildren: 0.08 }
+    transition: { duration: 0.65, ease: premiumEase, staggerChildren: 0.08 }
   }
 };
 
-const columnVariants = {
+const columnVariants: Variants = {
   hidden: { opacity: 0, y: 18 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] }
+    transition: { duration: 0.45, ease: premiumEase }
   }
 };
 

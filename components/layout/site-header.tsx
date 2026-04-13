@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { Menu, Settings2, ShoppingBag, X } from "lucide-react";
 import { useCartStore } from "@/stores/cart-store";
 
@@ -14,40 +14,43 @@ const navigation = [
   { href: "/checkout", label: "Odeme" }
 ];
 
-const headerVariants = {
+const premiumEase = [0.22, 1, 0.36, 1] as const;
+const exitEase = [0.4, 0, 1, 1] as const;
+
+const headerVariants: Variants = {
   hidden: { opacity: 0, y: -18 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] }
+    transition: { duration: 0.55, ease: premiumEase }
   }
 };
 
-const mobileOverlayVariants = {
+const mobileOverlayVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] }
+    transition: { duration: 0.22, ease: premiumEase }
   },
   exit: {
     opacity: 0,
-    transition: { duration: 0.18, ease: [0.4, 0, 1, 1] }
+    transition: { duration: 0.18, ease: exitEase }
   }
 };
 
-const mobilePanelVariants = {
+const mobilePanelVariants: Variants = {
   hidden: { opacity: 0, y: -18, scale: 0.98 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] }
+    transition: { duration: 0.28, ease: premiumEase }
   },
   exit: {
     opacity: 0,
     y: -12,
     scale: 0.98,
-    transition: { duration: 0.18, ease: [0.4, 0, 1, 1] }
+    transition: { duration: 0.18, ease: exitEase }
   }
 };
 

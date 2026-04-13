@@ -7,6 +7,7 @@ import { buildWhatsappUrl } from "@/lib/whatsapp";
 import { WhatsappIcon } from "@/components/ui/whatsapp-icon";
 
 const floatingUrl = buildWhatsappUrl();
+const premiumEase = [0.22, 1, 0.36, 1] as const;
 
 export function FloatingWhatsappButton() {
   return (
@@ -17,7 +18,7 @@ export function FloatingWhatsappButton() {
         y: 0,
         scale: 1
       }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+      transition={{ duration: 0.45, ease: premiumEase, delay: 0.2 }}
       className="fixed bottom-6 right-6 z-[70]"
     >
       <motion.div

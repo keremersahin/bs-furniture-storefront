@@ -11,23 +11,25 @@ type ProductCardProps = {
   product: Product;
 };
 
+const premiumEase = [0.22, 1, 0.36, 1] as const;
+
 export function ProductCard({ product }: ProductCardProps) {
   const primaryImage = product.images[0];
   const cardVariants = {
     rest: {
       y: 0,
-      transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] }
+      transition: { duration: 0.28, ease: premiumEase }
     },
     hover: {
       y: -6,
-      transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] }
+      transition: { duration: 0.28, ease: premiumEase }
     }
   } as const;
   const imageVariants = {
     rest: { scale: 1 },
     hover: {
       scale: 1.06,
-      transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] }
+      transition: { duration: 0.55, ease: premiumEase }
     }
   } as const;
   const overlayVariants = {
@@ -36,7 +38,7 @@ export function ProductCard({ product }: ProductCardProps) {
       opacity: 1,
       y: 0,
       pointerEvents: "auto" as const,
-      transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] }
+      transition: { duration: 0.25, ease: premiumEase }
     }
   } as const;
 

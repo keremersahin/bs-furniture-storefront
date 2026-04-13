@@ -9,12 +9,14 @@ type ProductWhatsappButtonProps = {
   href: string;
 };
 
+const premiumEase = [0.22, 1, 0.36, 1] as const;
+
 export function ProductWhatsappButton({ href }: ProductWhatsappButtonProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+      transition={{ duration: 0.35, ease: premiumEase, delay: 0.1 }}
       className="w-full sm:w-auto"
     >
       <Link

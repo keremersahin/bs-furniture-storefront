@@ -11,6 +11,8 @@ type ProductGalleryProps = {
   images: ProductImage[];
 };
 
+const premiumEase = [0.22, 1, 0.36, 1] as const;
+
 export function ProductGallery({ images }: ProductGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const activeImage = images[activeIndex] ?? null;
@@ -48,7 +50,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
             initial={{ opacity: 0, scale: 1.03 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.985 }}
-            transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.38, ease: premiumEase }}
             className="absolute inset-0"
           >
             <Image
