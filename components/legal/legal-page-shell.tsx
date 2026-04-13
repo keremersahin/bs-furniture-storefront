@@ -2,15 +2,15 @@ import { siteConfig } from "@/lib/config";
 
 type LegalSection = {
   title: string;
-  paragraphs?: string[];
-  items?: string[];
+  paragraphs?: readonly string[];
+  items?: readonly string[];
 };
 
 type LegalPageShellProps = {
   eyebrow: string;
   title: string;
   intro: string;
-  sections: LegalSection[];
+  sections: readonly LegalSection[];
 };
 
 const companyLines = [

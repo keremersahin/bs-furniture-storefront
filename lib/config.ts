@@ -15,7 +15,7 @@ export const siteConfig = {
   email: "ersahinethem@gmail.com",
   phone: rawPhone,
   phoneDisplay: formatPhoneForDisplay(rawPhone),
-  address: "Mahmudiye Mahallesi 6. Sokak No:14, Inegol/Bursa",
+  address: "Mahmudiye, 6. Mobilya Sk. No:14, 16400 İnegöl/Bursa, Türkiye",
   googleMapsEmbedUrl:
-    "https://www.google.com/maps?q=Mahmudiye%20Mahallesi%206.%20Sokak%20No%3A14%2C%20Inegol%2FBursa&z=15&output=embed"
+    "https://www.google.com/maps?q=Mahmudiye%2C%206.%20Mobilya%20Sk.%20No%3A14%2C%2016400%20%C4%B0neg%C3%B6l%2FBursa%2C%20T%C3%BCrkiye&z=15&output=embed"
 } as const;
