@@ -1,8 +1,27 @@
 import path from "path";
-import { mkdir, unlink, writeFile } from "fs/promises";
+import { createClient } from "@supabase/supabase-js";
 import { slugify } from "@/lib/utils";
 
-const PUBLIC_ROOT = path.join(process.cwd(), "public");
+const STORAGE_BUCKET = "product-images";
+
+function getRequiredEnv(name: "SUPABASE_URL" | "SUPABASE_SERVICE_ROLE_KEY") {
+  const value = process.env[name];
+
+  if (!value) {
+    throw new Error(`${name} tanimlanmamis.`);
+  }
+
+  return value;
+}
+
+function getSupabaseStorageClient() {
+  return createClient(getRequiredEnv("SUPABASE_URL"), getRequiredEnv("SUPABASE_SERVICE_ROLE_KEY"), {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  });
+}
 
 function getExtension(filename: string, fallback: string) {
   const extension = path.extname(filename);
@@ -18,27 +37,60 @@ export async function saveUploadedFile(
     return null;
   }
 
+  const supabase = getSupabaseStorageClient();
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
   const extension = getExtension(file.name, fallbackExtension);
   const baseName = slugify(path.basename(file.name, extension)) || folder;
-  const fileName = `${Date.now()}-${baseName}${extension}`;
-  const targetDirectory = path.join(PUBLIC_ROOT, "uploads", folder);
-  const targetPath = path.join(targetDirectory, fileName);
+  const objectPath = `${folder}/${Date.now()}-${baseName}${extension}`;
 
-  await mkdir(targetDirectory, { recursive: true });
-  await writeFile(targetPath, buffer);
+  const { error: uploadError } = await supabase.storage
+    .from(STORAGE_BUCKET)
+    .upload(objectPath, buffer, {
+      cacheControl: "3600",
+      contentType: file.type || undefined,
+      upsert: false
+    });
 
-  return `/uploads/${folder}/${fileName}`;
+  if (uploadError) {
+    throw new Error(`Dosya Supabase Storage'a yuklenemedi: ${uploadError.message}`);
+  }
+
+  const { data } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(objectPath);
+
+  if (!data.publicUrl) {
+    throw new Error("Yuklenen dosya icin public URL olusturulamadi.");
+  }
+
+  return data.publicUrl;
 }
 
 export async function deleteUploadedFile(fileUrl?: string | null) {
-  if (!fileUrl || !fileUrl.startsWith("/uploads/")) {
+  if (!fileUrl) {
     return;
   }
 
-  const relativePath = fileUrl.replace(/^\//, "");
-  const absolutePath = path.join(PUBLIC_ROOT, relativePath);
+  let objectPath = "";
 
-  await unlink(absolutePath).catch(() => undefined);
+  try {
+    const url = new URL(fileUrl);
+    const marker = `/storage/v1/object/public/${STORAGE_BUCKET}/`;
+    const pathname = decodeURIComponent(url.pathname);
+
+    if (!pathname.includes(marker)) {
+      return;
+    }
+
+    objectPath = pathname.split(marker)[1] ?? "";
+  } catch {
+    return;
+  }
+
+  if (!objectPath) {
+    return;
+  }
+
+  const supabase = getSupabaseStorageClient();
+
+  await supabase.storage.from(STORAGE_BUCKET).remove([objectPath]).catch(() => undefined);
 }

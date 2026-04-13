@@ -204,7 +204,7 @@ export function ProductForm({
               className="rounded-2xl border border-dashed border-slate-300 px-4 py-3 font-normal file:mr-4 file:rounded-full file:border-0 file:bg-slate-900 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
             />
             <span className="text-xs font-normal text-slate-500">
-              PDF formatinda, en fazla 12 MB.
+              PDF formatinda, en fazla 4 MB.
             </span>
             {product?.catalogPdfUrl ? (
               <a

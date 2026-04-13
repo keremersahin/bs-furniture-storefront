@@ -88,8 +88,8 @@ export function ImageUploadField({
           className="rounded-2xl border border-dashed border-slate-300 px-4 py-3 font-normal file:mr-4 file:rounded-full file:border-0 file:bg-brand file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
         />
         <span className="text-xs font-normal text-slate-500">
-          JPG, PNG veya WEBP formatinda, her biri en fazla 8 MB. Birden fazla
-          gorsel secilebilir.
+          JPG, PNG veya WEBP formatinda, her biri en fazla 4 MB. Vercel canli
+          limiti nedeniyle secilen dosyalarin toplam boyutu 4 MB'i asmamalidir.
         </span>
       </label>
 

@@ -9,8 +9,9 @@ import { deleteUploadedFile, saveUploadedFile } from "@/lib/uploads";
 import { getCategoryOptionBySlug } from "@/lib/category-options";
 import { slugify } from "@/lib/utils";
 
-const MAX_IMAGE_FILE_SIZE = 8 * 1024 * 1024;
-const MAX_CATALOG_FILE_SIZE = 12 * 1024 * 1024;
+const MAX_VERCEL_UPLOAD_TOTAL_SIZE = 4 * 1024 * 1024;
+const MAX_IMAGE_FILE_SIZE = 4 * 1024 * 1024;
+const MAX_CATALOG_FILE_SIZE = 4 * 1024 * 1024;
 
 function getTextField(formData: FormData, key: string) {
   return String(formData.get(key) ?? "").trim();
@@ -111,6 +112,17 @@ function assertImageFiles(imageFiles: File[]) {
     });
     assertMaxFileSize(file, MAX_IMAGE_FILE_SIZE, label);
   });
+}
+
+function assertUploadPayloadSize(imageFiles: File[], catalogFile: File | null) {
+  const totalBytes =
+    imageFiles.reduce((sum, file) => sum + file.size, 0) + (catalogFile?.size ?? 0);
+
+  if (totalBytes > MAX_VERCEL_UPLOAD_TOTAL_SIZE) {
+    throw new Error(
+      "Secilen dosyalarin toplam boyutu Vercel canli limitleri nedeniyle en fazla 4 MB olabilir."
+    );
+  }
 }
 
 function buildErrorRedirect(pathname: string, message: string) {
@@ -233,6 +245,7 @@ export async function createProductAction(formData: FormData) {
       label: "PDF katalog"
     });
     assertMaxFileSize(catalogFile, MAX_CATALOG_FILE_SIZE, "PDF katalog");
+    assertUploadPayloadSize(imageFiles, catalogFile);
 
     const baseData = getBaseProductData(formData, category.id);
     const imageAlt = getTextField(formData, "imageAlt") || baseData.title;
@@ -318,6 +331,7 @@ export async function updateProductAction(productId: string, formData: FormData)
       label: "PDF katalog"
     });
     assertMaxFileSize(catalogFile, MAX_CATALOG_FILE_SIZE, "PDF katalog");
+    assertUploadPayloadSize(imageFiles, catalogFile);
 
     let catalogPdfUrl = product.catalogPdfUrl;
     let uploadedImageUrls: string[] = [];
